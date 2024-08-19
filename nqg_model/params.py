@@ -74,10 +74,11 @@ SINGLE_RUN_PARAMS = NQGModelParams(
     quorum_agreement_weight_yes=1.0,
     quorum_agreement_weight_no=-1.0,
     quorum_agreement_weight_abstain=0.0,
-    max_quorum_selected_delegates=3,
-    max_quorum_candidate_delegates=10,
-    quorum_delegation_absolute_threshold=1/2,
-    quorum_delegation_relative_threshold=2/3,
+    min_quorum_threshold=2,
+    max_quorum_selected_delegates=8,
+    max_quorum_candidate_delegates=15,
+    quorum_delegation_absolute_threshold=0.0,
+    quorum_delegation_relative_threshold=0.6,
 
     neuron_layers=DEFAULT_NG_LAYERS,  # Default neuron layers from imported module
 
@@ -94,5 +95,7 @@ SINGLE_RUN_PARAMS = NQGModelParams(
     new_user_average_delegate_count=6.5,  # Average number of delegates for new users
     new_user_min_delegate_count=5,  # Minimum number of delegates for new users
     new_user_average_trustees=7.0,  # Average number of trustees for new users
+
+    
     NeuronPower=xr.DataArray(),  # Empty neuron power data array
 )

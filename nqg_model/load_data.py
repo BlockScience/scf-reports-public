@@ -35,8 +35,8 @@ def retrieve_vote_data(folder_path: str,
 
     columns = ["user", "project", "round", "vote_type", "delegation_result", "nqg_vote_power", "tally_vote_power"]
 
-    projects = set(vote_df.project)
-    users = set(vote_df.user)
+    projects = vote_df.project.unique()
+    users = vote_df.user.unique()
 
     actions = {"Yes", "No", "Abstain", "Delegate"}
 

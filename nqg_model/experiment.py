@@ -6,13 +6,13 @@ import pandas as pd
 from nqg_model.load_data import retrieve_other_data, retrieve_vote_data, retrieve_id_maps
 from pathlib import Path
 from cadCAD.tools import easy_run  # type: ignore
-
+import numpy as np
 from nqg_model.types import IDMaps  # type: ignore
 
 
 def full_historical_data_run_plus_counterfactual(folder_path: str,
                                                  round_no: int,
-                                                 map_project_to_label=False) -> tuple[DataFrame,DataFrame]:
+                                                 map_project_to_label=False) -> tuple[DataFrame, DataFrame]:
     """Function which runs the cadCAD simulations
 
     Returns:
@@ -27,7 +27,6 @@ def full_historical_data_run_plus_counterfactual(folder_path: str,
         decision_matrix, neuron_power_tensor, vote_df) = retrieve_vote_data(folder_path, round_no, maps, map_project_to_label=map_project_to_label)
     (delegates, trustees, user_reputations,
         user_past_votes) = retrieve_other_data(folder_path, round_no, maps)
-
 
     LABELS = ['backtesting', 'no_QD', 'no_NG', 'no_NQG',
               'without_first_layer', 'without_second_layer']
@@ -45,6 +44,22 @@ def full_historical_data_run_plus_counterfactual(folder_path: str,
     params['projects'] = projects
     params['counterfactual_flags'] = FLAGS  # type: ignore
     params['past_rounds'] = PAST_ROUNDS
+
+
+    param_update = dict(avg_new_users_per_day=0.0,  # Average number of new users per day
+                        avg_user_past_votes=np.nan,  # Average past votes per user
+                        new_user_action_probability=0.0,  # Probability of new user taking an action
+                        # Probability of new user voting on a project
+                        new_user_project_vote_probability=0.0,
+                        # Probability of new user voting 'Yes' on a project
+                        new_user_project_vote_yes_probability=np.nan,
+                        # Average number of delegates for new users
+                        new_user_average_delegate_count=0.0,
+                        new_user_min_delegate_count=0.0,  # Minimum number of delegates for new users
+                        new_user_average_trustees=0.0)  # Average number of trustees for new users)
+
+
+    params.update(param_update)
 
     users = [User(uid,
                   user_reputations.get(uid, ReputationCategory.Unknown),

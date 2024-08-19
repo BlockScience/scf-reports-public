@@ -34,6 +34,7 @@ def vote_from_quorum_delegation(user_quorum: list[UserUUID],
                                              params['max_quorum_selected_delegates']]
     else:
         selected_delegates = valid_delegates
+        
 
     # Compute Quorum Agreement and Size.
     agreement = 0.0
@@ -41,7 +42,7 @@ def vote_from_quorum_delegation(user_quorum: list[UserUUID],
     for delegate in selected_delegates:
         delegate_decisions: dict[ProjectUUID, Vote] = decision_matrix.get(delegate, {})
         action: Vote | None = delegate_decisions.get(project_id, None)
-        if action is not None:
+        if action == Vote.Yes or action == Vote.No:
             quorum_size += 1
             if action is Vote.Yes:
                 agreement += params['quorum_agreement_weight_yes']
@@ -59,16 +60,23 @@ def vote_from_quorum_delegation(user_quorum: list[UserUUID],
 
     # Resolve vote as per quorum consensus
     resolution = Vote.Abstain
-    if abs(absolute_agreement) >= params['quorum_delegation_absolute_threshold']:
-        if abs(relative_agreement) >= params['quorum_delegation_relative_threshold']:
-            if relative_agreement > 0:
-                resolution = Vote.Yes
+
+    if len(valid_delegates) >= params['min_quorum_threshold']:
+        if abs(absolute_agreement) >= params['quorum_delegation_absolute_threshold']:
+            if abs(relative_agreement) >= params['quorum_delegation_relative_threshold']:
+                if relative_agreement > 0:
+                    resolution = Vote.Yes
+                elif relative_agreement < 0:
+                    resolution = Vote.No
+                else:
+                    resolution = Vote.Abstain
             else:
-                resolution = Vote.No
+                resolution = Vote.Abstain
         else:
             resolution = Vote.Abstain
     else:
         resolution = Vote.Abstain
+
 
     return resolution
 

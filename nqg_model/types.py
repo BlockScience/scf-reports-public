@@ -69,7 +69,7 @@ class ProjectAction(Enum):
     Delegate = auto()
     Abstain = auto()
 
-@dataclass
+@dataclass(frozen=True)
 class User:
     """
     Data class to hold information about a User.
@@ -128,6 +128,7 @@ class NQGModelParams(TypedDict):
     quorum_agreement_weight_yes: float
     quorum_agreement_weight_no: float
     quorum_agreement_weight_abstain: float
+    min_quorum_threshold: int
     max_quorum_selected_delegates: int
     max_quorum_candidate_delegates: int
     quorum_delegation_absolute_threshold: float

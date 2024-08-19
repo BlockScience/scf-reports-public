@@ -19,7 +19,7 @@ NQG_MODEL_BLOCKS: list[dict] = [
         'label': 'Onboard users',
         'policies': {},
         'variables': {
-            'users': s_onboard_users
+             'users': s_onboard_users
             # TODO: make sure that `users` is not mutated when doing historical run
         }
     },

@@ -105,6 +105,7 @@ def s_onboard_users(params: NQGModelParams, _2, _3, state: NQGModelState, _5) ->
 
     avg_new_users_per_ts = params['avg_new_users_per_day'] * \
         params['timestep_in_days']
+    
     new_users: int = poisson.rvs(avg_new_users_per_ts)
 
     past_round_choices = params['past_rounds']
